@@ -17,5 +17,10 @@ bind -r '\C-s'
 [[ -s /home/james/.nvm/nvm.sh ]] && . /home/james/.nvm/nvm.sh # This loads NVM
 [[ -s /srv/sites/james.warwood/.nvm/nvm.sh ]] && . /srv/sites/james.warwood/.nvm/nvm.sh # This loads NVM
 
+# If we're using git-backed dotfiles, run the update script
+if [ -e ~/dotfiles/update ]; then
+    ~/dotfiles/./update
+fi
+
 # End ~/.bash_profile
 
