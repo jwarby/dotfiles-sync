@@ -27,6 +27,7 @@ if [ $? -eq 0 ]; then
     rm error.log
     echo -n " Done!"
     echo ""
+    ./install
 else
     # Prepend today's date
     today=`date`
