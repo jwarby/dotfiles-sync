@@ -47,6 +47,12 @@ set backspace=eol,start,indent
 " Show filename in terminal title
 set title
 
+" Fix vim-airline plugin on startup
+set laststatus=2
+set noshowmode
+set ttimeoutlen=50
+let g:airline_powerline_fonts = 1
+
 """"""""""""""""""""
 " Plugin settings. "
 """"""""""""""""""""

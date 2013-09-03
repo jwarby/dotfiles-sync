@@ -1,4 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/home/james/workspace/javascript/clazz/sandbox/amd_test/app'
 let g:netrw_dirhist_2='/home/james/my_test_dir'
+let g:netrw_dirhist_3='/home/james/workspace/javascript'
+let g:netrw_dirhist_4='/home/james/workspace/javascript/clazz'
+let g:netrw_dirhist_5='/home/james/workspace/javascript/clazz/src'
