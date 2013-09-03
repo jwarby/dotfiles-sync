@@ -5,6 +5,13 @@ if [ -e ~/.bashrc ]; then
     source ~/.bashrc
 fi
 
+# Source Node Version Manager
+if [ -f ~/.nvm/nvm.sh ]; then
+    source ~/.nvm/nvm.sh
+    # Set node version to use
+    nvm use 0.10
+fi
+
 # User specific environment and startup programs
 
 PATH=$PATH:$HOME/bin
