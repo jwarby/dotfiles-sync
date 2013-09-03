@@ -1,9 +1,21 @@
+#! /bin/bash
 # Begin ~/.bashrc
 
-# Load custom functions file
-FUNCTIONS=find ~/.bash_functions
-if [ FUNCTIONS ] ; then
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Source custom functions
+if [ -f ~/.bash_functions ]; then
     . ~/.bash_functions
+fi
+
+# Source Node Version Manager
+if [ -f ~/.nvm/nvm.sh ]; then
+    source ~/.nvm/nvm.sh
+    # Set node version to use
+    nvm use 0.10
 fi
 
 # If not running interactively, don't do anything
