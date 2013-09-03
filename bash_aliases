@@ -16,7 +16,7 @@ alias nesasm="/home/james/Programs/nes-dev/./nesasm"
 alias google="/home/james/Scripts/google.sh"
 
 # Clear and re-show reminders
-alias clear="clear && source ~/.bashrc"
+alias clear="clear && showReminders"
 
 # Frog Windows 7 VM
 alias windows='rdesktop -T "Frog Windows 7 VM" -g 1920x900 -P -z -x l -r sound:off -u "Frog\james.warwood" vm-win7-x64'

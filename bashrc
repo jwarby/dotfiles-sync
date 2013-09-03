@@ -118,20 +118,25 @@ export GREP_OPTIONS='--color=auto'
 export EDITOR=vim
 
 # Reminder system
-if command -v rem >/dev/null 2>&1 && command -v cowsay >/dev/null 2>&1; then
-    OUTPUT=`rem`
-    if [ "$OUTPUT" == "No reminders." ];
-    then
-        echo -en "\e[01;34m"
-        cowsay -f bong $OUTPUT
-        echo ""
-    else
-        echo -en "\e[01;33m"
-        cowsay -f bong "$OUTPUT"
+function showReminders {
+    if command -v rem >/dev/null 2>&1 && command -v cowsay >/dev/null 2>&1; then
+        OUTPUT=`rem`
+        if [ "$OUTPUT" == "No reminders." ];
+        then
+            echo -en "\e[01;34m"
+            cowsay -f bong $OUTPUT
+            echo ""
+        else
+            echo -en "\e[01;33m"
+            cowsay -f bong "$OUTPUT"
+        fi
     fi
-fi
 
-echo -en "\e[00;m"
+    echo -en "\e[00;m"
+}
+
+# Show reminders
+showReminders
 
 # Enable XON flow control so terminal programs can use stuff like Ctrl-S 
 stty -ixon
