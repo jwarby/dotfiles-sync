@@ -1,3 +1,4 @@
+#! /bin/bash
 # Begin ~/.bash_aliases
 # Personal alias commands.
 
@@ -51,4 +52,7 @@ alias install='sudo apt-get install'
 
 # Remove shortcut
 alias uninstall='sudo apt-get remove'
+
+# Log unpushed commits
+alias glu='git log --no-merges --author="`git config user.name`" `git rev-parse --abbrev-ref --symbolic-full-name @{u}`..HEAD | vim -'
 # End ~/.bash_aliases
