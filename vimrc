@@ -147,10 +147,10 @@ nnoremap rq :silent! normal mpeld bhd `ph<CR>
 " Highlight long lines. "
 """""""""""""""""""""""""
 highlight LongLines ctermbg=167 ctermfg=188
-au BufWinEnter * call matchadd('LongLines', '\%>81v.\+', -1)
+au BufWinEnter *.js,*.html,*.json,*.rb,*.py call matchadd('LongLines', '\%>81v.\+', -1)
 
 highlight VeryLongLines ctermbg=124 ctermfg=188
-au BufWinEnter * call matchadd('VeryLongLines', '\%>121v.\+', -1)
+au BufWinEnter *.js,*.html,*.json,*.rb,*.py call matchadd('VeryLongLines', '\%>121v.\+', -1)
 
 " Define highlight group
 highlight Debug ctermbg=93 ctermfg=193
