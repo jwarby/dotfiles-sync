@@ -1,7 +1,6 @@
+#! /bin/bash
 # Begin ~/.bash_functions
 # Personal bash functions.
-
-
 function coffee() {
     echo ""
 
@@ -117,10 +116,30 @@ function mkdircd () {
     mkdir -p "$@" && cd "$@"; 
 }
 
-# Git branch info 
+# Git branch info
 # Credit: http://railstips.org/blog/archives/2009/02/02/bedazzle-your-bash-prompt-with-git-info/
 function parse_git_branch() {
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-    echo "("${ref#refs/heads/}")"
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  if [ "$ref" != '' ]; then
+      echo "${ref#refs/heads/}"
+  else
+      echo ""
+  fi
 }
+
+function print_git_branch() {
+    branch=$(parse_git_branch)
+    isRepo=$(git rev-parse --is-inside-work-tree 2> /dev/null)
+
+    if [ ! "$isRepo" ]; then
+        return
+    fi
+
+    if [ "$branch" == "" ]; then
+        echo "(no branch)"
+    else
+        echo "(${branch})"
+    fi
+}
+
 # End ~/.bash_functions
