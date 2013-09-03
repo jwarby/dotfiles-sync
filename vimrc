@@ -53,6 +53,9 @@ set noshowmode
 set ttimeoutlen=50
 let g:airline_powerline_fonts = 1
 
+" Incremental search
+set incsearch
+
 """"""""""""""""""""
 " Plugin settings. "
 """"""""""""""""""""
