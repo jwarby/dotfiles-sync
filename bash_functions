@@ -1,47 +1,54 @@
 #! /bin/bash
 # Begin ~/.bash_functions
-# Personal bash functions.
+
+# Coffee timer
 function coffee() {
     echo ""
 
     # Calculate timeout
-    TIMEOUT=$(echo "60*$1" | bc | sed 's/[.].*//')
-
-    # Counter
-    TIMER=0
-
-    # Start brewing message
-    echo -n "Your coffee is brewing"
+    total_time=$(echo "60*$1" | bc | sed 's/[.].*//')
+    time_elapsed=0
+    total_bars=50
 
     # Timer function
     function brew() {
+        # Percentage complete
+        percentage=$((($time_elapsed * 100 / $total_time * 100) / 100))
+        # Number of solid bars that percentage translates to
+        current_bars=$((($percentage * $total_bars) / 100))
 
-        # Show progress dot every 5 seconds
-        MOD=$(($TIMER%5))
-        if [ $MOD -eq 0 ]; then
-            echo -n "."
-        fi
+        echo -ne "Your coffee is brewing ["
+        for (( i=0; i<$total_bars; i++))
+            do
+                # Print a bar if current bars greater than index
+                if [ $i -lt $current_bars ]; then
+                    echo -ne "\xe2\x96\xaa"
+                # Otherwise, print a space
+                else
+                    echo -ne " "
+                fi
+        done
+        echo -ne "] $percentage%\r"
 
         # If timer not done, sleep for 1 second and then re-run brew
-        if [ $TIMER -lt $TIMEOUT ]; then
+        if [ $time_elapsed -lt $total_time ]; then
             sleep 1
-            let TIMER=$TIMER+1
+            let time_elapsed=$time_elapsed+1
             brew
 
         # Timer finished
         else
-
-            echo -n " ready!"
             echo ""
+            echo "Ready!"
             echo ""
 
             # Send notification
             notify-send --urgency=low "Coffee has finished brewing."
         fi
     }
-    
+
     # Start brewing
-    brew 
+    brew
 }
 
 # Cd's to a directory in the current path above the pwd  with the supplied name.
