@@ -142,4 +142,22 @@ function print_git_branch() {
     fi
 }
 
+# Reminder system
+function showReminders {
+    if command -v rem >/dev/null 2>&1 && command -v cowsay >/dev/null 2>&1; then
+        OUTPUT=`rem`
+        if [ "$OUTPUT" == "No reminders." ];
+        then
+            echo -en "\e[01;34m"
+            cowsay -f bong $OUTPUT
+            echo ""
+        else
+            echo -en "\e[01;33m"
+            cowsay -f bong "$OUTPUT"
+        fi
+    fi
+
+    echo -en "\e[00;m"
+}
+
 # End ~/.bash_functions
