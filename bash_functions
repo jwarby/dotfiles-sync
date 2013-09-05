@@ -149,9 +149,11 @@ function parse_git_branch() {
 }
 
 # Prints the current git branch, or 'no branch' if inside a Git repo but not on
-# any branch.
+# any branch.  Can be passed optional wrapping chars as arguments 1 and 2
 # Usage:
-#   print_git_branch
+#   print_git_branch => 'master'
+#   print_git_branch '(' ')' => '(master)'
+#
 function print_git_branch() {
     branch=$(parse_git_branch)
     isRepo=$(git rev-parse --is-inside-work-tree 2> /dev/null)
@@ -162,9 +164,9 @@ function print_git_branch() {
     fi
 
     if [ "$branch" == "" ]; then
-        echo "no branch"
+        echo "$1no branch$2"
     else
-        echo "${branch}"
+        echo "$1${branch}$2"
     fi
 }
 
