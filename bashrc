@@ -106,11 +106,12 @@ fi
 bold=`tput bold`
 normal=`tput sgr0`
 
-
+# Colors
 DEFAULT="\[\033[0m\]"
 YELLOW="\[\033[1;33m\]"
 
-PS1="[\u@\h \w]$YELLOW\$(print_git_branch) $DEFAULT\$ ${normal}" 
+# PS1 with Git branch name
+PS1="[\u@\h \w]$YELLOW(\$(print_git_branch)) $DEFAULT\$ ${normal}" 
 
 # Export variables
 export TERM=xterm-256color
