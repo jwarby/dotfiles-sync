@@ -149,12 +149,27 @@ nnoremap rq :silent! normal mpeld bhd `ph<CR>
 """""""""""""""""""""""""
 " Highlight long lines. "
 """""""""""""""""""""""""
-highlight LongLines ctermbg=167 ctermfg=188
-au BufWinEnter *.js,*.html,*.json,*.rb,*.py call matchadd('LongLines', '\%>81v.\+', -1)
+function! HighlightLongLines()
+    " Return if buffer variable set
+    if exists('b:noHighlightLongLines')
+        return
+    endif
+    " Add highlight group for 80+ column lines
+    highlight LongLines ctermbg=167 ctermfg=188
+    call matchadd('LongLines', '\%>80v.\+', -1)
+    " Add highlight group for 120+ column lines
+    highlight VeryLongLines ctermbg=124 ctermfg=188
+    call matchadd('VeryLongLines', '\%>120v.\+', -1)
+endfunction
 
-highlight VeryLongLines ctermbg=124 ctermfg=188
-au BufWinEnter *.js,*.html,*.json,*.rb,*.py call matchadd('VeryLongLines', '\%>121v.\+', -1)
-
+" Set no highlight option for diff buffers
+autocmd FileType diff let b:noHighlightLongLines=1
+" Call highlight long lines to add match groups for files without
+" noHighlightLongLines set
+autocmd BufWinEnter * call HighlightLongLines()
+"""""""""""""""""""""""""""""
+" Highlight comment @ tags. "
+"""""""""""""""""""""""""""""
 " Define highlight group
 highlight Debug ctermbg=93 ctermfg=193
 au BufWinEnter * call matchadd('Debug', '@DEBUG\|@TODO\|@fixme\c', -1)
