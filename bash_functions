@@ -64,6 +64,7 @@ function ..s() {
 #   coffee <minutes>, e.g. `coffee 4` or `coffee 3.5`
 function coffee() {
     echo ""
+    tput civis
 
     # Calculate timeout
     total_time=$(echo "60*$1" | bc | sed 's/[.].*//')
@@ -104,6 +105,7 @@ function coffee() {
 
             # Send notification
             notify-send --urgency=low "Coffee has finished brewing."
+            tput cvvis
         fi
     }
 
