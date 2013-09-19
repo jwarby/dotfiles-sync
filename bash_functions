@@ -48,10 +48,11 @@ EOF
 function ..s() {
     CUR_PATH=`pwd`
 
-    if [[ "$CUR_PATH" =~ /$1/ ]]; then
+    query=`basename $1`
+    if [[ "$CUR_PATH" =~ /$query/ ]]; then
 
         # Path to cd to
-        [[ "$CUR_PATH" =~ ^.*/$1 ]]
+        [[ "$CUR_PATH" =~ ^.*/$query ]]
 
         cd ${BASH_REMATCH[0]}
     else
@@ -192,4 +193,21 @@ function showReminders {
     echo -en "\e[00;m"
 }
 
+# Compress a directory string:
+#   /home/james/workspace/something/aproject/ -> /h/j/w/s/aproject
+# Usage:
+#   dir_chomp <directory> <length>
+dir_chomp () {
+    local p=${1/#$HOME/\~} b s
+    s=${#p}
+    while [[ $p != ${p//\/} ]]&&(($s>$2))
+    do
+        p=${p#/}
+        [[ $p =~ \.?. ]]
+        b=$b/${BASH_REMATCH[0]}
+        p=${p#*/}
+        ((s=${#b}+${#p}))
+    done
+    echo ${b/\/~/\~}${b+/}$p
+}
 # End ~/.bash_functions

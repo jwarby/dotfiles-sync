@@ -29,5 +29,7 @@ if [ -e ~/dotfiles/update ]; then
     ~/dotfiles/./update
 fi
 
+echo "Hellooooooooooo"
+
 # End ~/.bash_profile
 

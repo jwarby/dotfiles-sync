@@ -1,4 +1,3 @@
-#! /bin/bash
 # Begin ~/.bashrc
 
 # Source global definitions
@@ -111,7 +110,9 @@ DEFAULT="\[\033[0m\]"
 YELLOW="\[\033[1;33m\]"
 
 # PS1 with Git branch name
-PS1="[\u@\h \w]$YELLOW\$(print_git_branch '(' ')') $DEFAULT\$ ${normal}"
+let max_width=`tput cols`/3
+echo $max_width
+PS1='[\u@\h $(dir_chomp `pwd` $max_width)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
 
 # Export variables
 export TERM=xterm-256color
@@ -124,4 +125,10 @@ showReminders
 # Enable XON flow control so terminal programs can use stuff like Ctrl-S 
 stty -ixon
 
+# Source Node Version Manager
+if [ -e ~/.nvm/nvm.sh ]; then
+    source ~/.nvm/nvm.sh
+    # Set node version to use
+    nvm use 0.10
+fi
 # End ~/.bashrc
