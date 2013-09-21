@@ -111,7 +111,6 @@ YELLOW="\[\033[1;33m\]"
 
 # PS1 with Git branch name
 let max_width=`tput cols`/3
-echo $max_width
 PS1='[\u@\h $(dir_chomp `pwd` $max_width)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
 
 # Export variables
