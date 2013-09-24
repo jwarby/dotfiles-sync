@@ -56,6 +56,11 @@ let g:airline_powerline_fonts = 1
 " Incremental search
 set incsearch
 
+" Turn filetype plugin on
+filetype on
+filetype plugin on
+filetype indent on
+
 """"""""""""""""""""
 " Plugin settings. "
 """"""""""""""""""""
@@ -103,7 +108,7 @@ au InsertLeave * match ExtraWhiteSpace /\s\+$/
 """"""""""""""
 " Functions. "
 """"""""""""""
-" Display git commit for revision under cursor
+" Display git commit for revision
 function! DisplayGitCommit(revision)
   let commit = system("git show ".a:revision)
   tabnew
@@ -125,7 +130,7 @@ nmap <silent> <A-Right> :wincmd l<CR>
 " Vertically split open file under cursor
 nmap <F9> :botright vertical wincmd f<CR>
 
-" Show revision
+" Show revision under cursor in new tab
 nmap <F8> :DisplayGitCommit <c-r><c-w><cr>
 
 " Save (Ctrl+S)
