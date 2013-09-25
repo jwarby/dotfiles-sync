@@ -1,6 +1,6 @@
 " Open mdn page for keyword
 function! OpenMdnPage(keyword)
-    execute "silent !sensible-browser 'http://www.google.com/search?btnI&q=mdn+'" . a:keyword . ">/dev/null 2>&1"
+    execute "silent !google-chrome 'http://www.google.com/search?btnI&q=mdn+'" . a:keyword . ">/dev/null 2>&1"
     :silent !wmctrl -a Google Chrome
     redraw!
 endfunction
