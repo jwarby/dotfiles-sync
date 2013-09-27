@@ -114,20 +114,6 @@ function coffee() {
     brew
 }
 
-# Counts the number of insertions/deletions in a diff file, i.e.
-# '3 files modified, 70 insertions(+), 50 deletions(-)'
-# Usage:
-#   git diff | diffstat
-#   cat mydiff.diff | diffstat
-function diffstat() {
-    PIPED_INPUT=`cat -`
-    FILES=`echo "$PIPED_INPUT" | grep -E ^index -i | wc -l`
-    INSERTIONS=`echo "$PIPED_INPUT" | grep -E ^[+]{1}[^+]+ | wc -l`
-    DELETIONS=`echo "$PIPED_INPUT" | grep -E ^[-]{1}[^-]+ | wc -l`
-
-    echo "${FILES} files modified, ${INSERTIONS} insertions(+), ${DELETIONS} deletions(-)"
-}
-
 # Make directory and cd into it. Also creates any directories leading up to
 # specified dir if they don't exist (mkdir -p flag)
 # Usage:
