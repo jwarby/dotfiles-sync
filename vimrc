@@ -59,7 +59,6 @@ set incsearch
 " Turn filetype plugin on
 filetype on
 filetype plugin on
-filetype indent on
 
 """"""""""""""""""""
 " Plugin settings. "
