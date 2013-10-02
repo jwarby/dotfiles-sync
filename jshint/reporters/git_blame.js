@@ -2,9 +2,10 @@
 var exec = require("child_process").exec;
 
 module.exports = {
-    reporter: function(errors) {
+    reporter: function(errors, something, somethingElse, callback) {
         var processed = 0;
         var errorsByUser = {};
+        var currentUser = "";
 
         var process = function() {
             var error = errors[processed].error;
@@ -14,6 +15,12 @@ module.exports = {
 
             exec(command, function(err, stdout, stderror) {
                 offendingUser = stdout.match(/^[^(]+\(([A-Za-z ]+[^ 0-9])[ 0-9]/)[1];
+
+                // If not committed yet, offending user is the current user
+                if (offendingUser === 'Not Committed Yet' && currentUser) {
+                    offendingUser = currentUser;
+                }
+
                 errorsByUser[offendingUser] = errorsByUser[offendingUser] || 0;
                 errorsByUser[offendingUser]++;
                 console.log([
@@ -37,20 +44,30 @@ module.exports = {
                     process();
                 } else {
                     console.log("Offenders:");
-                    Array.prototype.sort.call(errorsByUser, function(a, b) {
-                        console.log(a, b);
+
+                    var sorted = Object.keys(errorsByUser).sort(function(a, b) {
+                        return errorsByUser[b] - errorsByUser[a];
                     });
 
-                    for (var e in errorsByUser) {
-                        if (errorsByUser.hasOwnProperty(e)) {
-                            console.log(e, ":", errorsByUser[e]);
-                        }
+                    for (var s = 0; s < sorted.length; s++) {
+                        console.log(sorted[s]+":", errorsByUser[sorted[s]]);
                     }
+
+                    callback();
                 }
             });
         }
 
-        process();
+        if (errors.length) {
+            // Get and store the current git user for resolving
+            // 'Not Committed Yet'
+            exec("git config user.name", function(error, stdout, stdin) {
+                currentUser = stdout.replace(/\n$/, "");
+                process();
+            });
+        } else {
+            callback();
+        }
     }
 }
 module.exports.reporter.async = true;
