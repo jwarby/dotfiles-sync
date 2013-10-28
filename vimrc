@@ -139,6 +139,14 @@ imap <C-s> <Esc>:w<CR>
 " Save (visual mode)
 vmap <C-s> <Esc>:w<CR>
 
+" Comment/uncomment shortcut
+imap <C-Right> <Esc>:norm @c<CR>
+vmap <C-Right> <Esc>:'<,'>norm @c<CR>
+nmap <C-Right> <Esc>:norm @c<CR>
+imap <C-Left> <Esc>:norm @u<CR>
+vmap <C-Left> <Esc>:'<,'>norm @u<CR>
+nmap <C-Left> <Esc>:norm @u<CR>
+
 " Select all
 nmap <C-a> <Esc>gg <S-v><S-g><CR>
 """"""""""""""""""""""""""
