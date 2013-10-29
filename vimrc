@@ -89,7 +89,7 @@ autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 " Override stupid default text width
 autocmd FileType gitcommit set tw=200
 " Compile LESS files on save
-autocmd BufWritePost *.less execute 'silent !type lessc && lessc % > %:r.css'
+autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
 """"""""""""""""""""
 " Custom commands. "
 " """"""""""""""""""
