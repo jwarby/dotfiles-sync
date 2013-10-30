@@ -1,3 +1,4 @@
+" Begin .vimrc
 color xoria256
 
 " Not compatible with vi
@@ -89,7 +90,7 @@ autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 " Override stupid default text width
 autocmd FileType gitcommit set tw=200
 " Compile LESS files on save
-autocmd BufWritePost *.less execute 'silent !type lessc && lessc % > %:r.css'
+autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
 """"""""""""""""""""
 " Custom commands. "
 " """"""""""""""""""
@@ -185,3 +186,10 @@ au BufWinEnter * call matchadd('Hack', '@HACK\|@WITCHCRAFT\|@HURTALERT\c', -1)
 """""""""""""""""""""""""""""""""""""""""
 cabbrev hres vertical res
 cabbrev vres res
+"""""""""""""
+" Pathogen. "
+"""""""""""""
+" Pathogen
+execute pathogen#infect()
+call pathogen#helptags() " generate helptags for everything in 'runtimepath'
+" End .vimrc
