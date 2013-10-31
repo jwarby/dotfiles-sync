@@ -14,7 +14,7 @@ module.exports = {
             var command = "git blame -L "+error.line+","+error.line+" "+errors[processed].file;
 
             exec(command, function(err, stdout, stderror) {
-                offendingUser = stdout.match(/^[^(]+\(([A-Za-z ]+[^ 0-9])[ 0-9]/)[1];
+                offendingUser = stdout.match(/^[^(]+\(([A-Za-z\. ]+[^ 0-9])[ 0-9]/)[1];
 
                 // If not committed yet, offending user is the current user
                 if (offendingUser === 'Not Committed Yet' && currentUser) {

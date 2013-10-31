@@ -110,8 +110,9 @@ DEFAULT="\[\033[0m\]"
 YELLOW="\[\033[1;33m\]"
 
 # PS1 with Git branch name
-let max_width=`tput cols`/3
-PS1='[\u@\h $(dir_chomp `pwd` $max_width)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
+let ps1_max_width=`tput cols`/7
+export PS1_MAX_WIDTH=$ps1_max_width
+PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
 
 # Export variables
 export TERM=xterm-256color
