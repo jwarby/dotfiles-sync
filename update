@@ -1,0 +1,39 @@
+#! /bin/bash
+
+# Dots
+function startDots() {
+    while true
+    do
+        echo -ne "."
+        sleep 1
+    done
+}
+
+# Async ftw
+echo -n "Updating dot files"
+# Show progress
+startDots &
+dots_pid=$!
+
+# Perform update
+pushd `dirname $0` > /dev/null
+SCRIPTPATH=`pwd -P`
+popd > /dev/null
+cd $SCRIPTPATH
+git pull >/dev/null 2>error.log
+
+if [ $? -eq 0 ]; then
+    # Delete error log file
+    rm error.log
+    echo -n " Done!"
+    echo ""
+    ./install
+else
+    # Prepend today's date
+    today=`date`
+    sed -i "1i ${today}:\n" error.log
+    echo -n " Something went wrong - see ~/dotfiles/error.log"
+    echo ""
+fi
+
+kill $dots_pid

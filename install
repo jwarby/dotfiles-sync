@@ -1,0 +1,17 @@
+#! /bin/bash
+
+# All files in current directory, excluding .git and .
+for file in `find . -maxdepth 1 | grep -v "\(\.git\|^\.$\|\./update$\)"`
+do
+    # If not this file
+    if [ "$0" != "$file" ]; then
+        # Replace ./ with .
+        name=`echo $file | sed 's/^\.\//\./'`
+        link=~/$name
+
+        # Create symbolic link if it doesn't exist
+        if [ ! -e $link ]; then
+            ln -s dotfiles/$file $link
+        fi
+    fi
+done
