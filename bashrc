@@ -131,4 +131,10 @@ if [ -e ~/.nvm/nvm.sh ]; then
     # Set node version to use
     nvm use 0.10
 fi
+
+# Source local bashrc
+if [ -e ~/.bashrc.local ]; then
+    source ~/.bashrc.local
+fi
+
 # End ~/.bashrc
