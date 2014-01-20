@@ -28,7 +28,8 @@ syntax on
 
 " No swap files or backups
 set nobackup
-set noswapfile
+" Set directory for swap files
+set dir=~/tmp,/var/tmp,/tmp
 
 " Enable modelines when root
 set modeline
