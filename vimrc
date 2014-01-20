@@ -118,6 +118,12 @@ function! DisplayGitCommit(revision)
   set nomodified
 endfunction
 command! -nargs=+ -complete=command DisplayGitCommit call DisplayGitCommit(<q-args>)
+
+" Open mdn page
+function! OpenMdnPage(page)
+    execute '!' . '$BROWSER "http://www.google.com/search?q=mdn+' . a:page .'&btnI"'
+endfunction
+command! -nargs=+ -complete=command Mdn call OpenMdnPage(<q-args>)
 """""""""""""""""
 " Key mappings. "
 " """""""""""""""
