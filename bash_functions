@@ -224,7 +224,7 @@ function check_battery() {
     elif [ $percent -lt 60 ]; then
         local colour="\033[38;5;227m"
     else
-        local colour="\033[38;5;34m"
+        local colour="\033[38;5;156m"
     fi
 
     if [ "$colour" ]; then
