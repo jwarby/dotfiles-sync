@@ -113,7 +113,7 @@ YELLOW="\[\033[1;33m\]"
 let ps1_max_width=`tput cols`/7
 export PS1_MAX_WIDTH=$ps1_max_width
 function status() {
-    git status | grep "nothing to commit" > /dev/null 2>&1
+    git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         echo -e "\033[38;5;34m▪\033[1;33m"
     else
