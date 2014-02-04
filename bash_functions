@@ -63,7 +63,7 @@ function ..s() {
 # Coffee timer.  Counts down the specified minutes and displays a notification.
 # Usage:
 #   coffee <minutes>, e.g. `coffee 4` or `coffee 3.5`
-function coffee() {
+function coffee_timer() {
     echo ""
     tput civis
 
