@@ -112,7 +112,16 @@ YELLOW="\[\033[1;33m\]"
 # PS1 with Git branch name
 let ps1_max_width=`tput cols`/7
 export PS1_MAX_WIDTH=$ps1_max_width
-PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
+function status() {
+    git status | grep "nothing to commit" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "\033[38;5;34m▪\033[1;33m"
+    else
+        echo -e "\033[38;5;124m▪\033[1;33m"
+    fi
+}
+
+PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" "$(status))")\[\033[0m\] \$ ${normal}'
 
 # Export variables
 export TERM=xterm-256color
