@@ -158,16 +158,14 @@ function print_git_branch() {
     fi
 
     dirty=$(isRepoDirty)
-    if [ "$dirty" == "0" ]; then
-        colour="\033[38;5;34m"
-    else
-        colour="\033[38;5;124m"
+    if [ "$dirty" != "0" ]; then
+        output="\033[38;5;124m⚑"
     fi
 
     if [ "$branch" == "" ]; then
-        echo -e "$1no branch$colour⇡⇣\033[1;33m$2"
+        echo -e "$1no branch$output\033[1;33m$2"
     else
-        echo -e "$1${branch}$colour↑↓\033[1;33m$2"
+        echo -e "$1${branch}$output\033[1;33m$2"
     fi
 }
 
