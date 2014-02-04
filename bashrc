@@ -113,7 +113,14 @@ YELLOW="\[\033[1;33m\]"
 let ps1_max_width=`tput cols`/7
 export PS1_MAX_WIDTH=$ps1_max_width
 
-PS1='[\u@\h $(check_battery) $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
+function battery() {
+    result=$(check_battery) > /dev/null 2>&1
+    if [ $? -ne 1 ]; then
+        echo -n "$(check_battery) "
+    fi
+}
+
+PS1='[\u@\h $(battery)$(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
 
 # Export variables
 export TERM=xterm-256color

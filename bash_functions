@@ -212,7 +212,7 @@ function check_battery() {
     local current=$(cat /sys/class/power_supply/BAT0/charge_now 2> /dev/null)
 
     if [ ! "$full" ]; then
-        return
+        return 1
     fi
 
     percent=`echo "scale=2;${current} / ${full}" | bc`
