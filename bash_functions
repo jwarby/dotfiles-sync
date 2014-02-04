@@ -221,14 +221,16 @@ function check_battery() {
     percent=$(echo "$percent*100" | bc)
     percent=${percent/.*}
 
-    if [ $percent -lt 60 ]; then
-        local colour="\033[38;5;220m"
-    elif [ $percent -lt 30 ]; then
+    if [ $percent -lt 30 ]; then
         local colour="\033[38;5;124m"
+    elif [ $percent -lt 60 ]; then
+        local colour="\033[38;5;227m"
+    else
+        local colour="\033[38;5;34m"
     fi
 
     if [ "$colour" ]; then
-        echo -e "${bold}$colour 🁛  $percent%\033[0m${normal}"
+        echo -e "${bold}$colour⚡ ${normal}$colour$percent%\033[0m${normal}"
     fi
 }
 # End ~/.bash_functions

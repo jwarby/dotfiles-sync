@@ -113,7 +113,7 @@ YELLOW="\[\033[1;33m\]"
 let ps1_max_width=`tput cols`/7
 export PS1_MAX_WIDTH=$ps1_max_width
 
-PS1='[\u@\h$(check_battery) $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
+PS1='[\u@\h $(check_battery) $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
 
 # Export variables
 export TERM=xterm-256color
