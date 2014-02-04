@@ -137,6 +137,11 @@ function parse_git_branch() {
   fi
 }
 
+function isRepoDirty() {
+    git status 2> /dev/null | grep "nothing to commit" > /dev/null 2>&1
+    echo $?
+}
+
 # Prints the current git branch, or 'no branch' if inside a Git repo but not on
 # any branch.  Can be passed optional wrapping chars as arguments 1 and 2
 # Usage:
@@ -152,10 +157,17 @@ function print_git_branch() {
         return
     fi
 
-    if [ "$branch" == "" ]; then
-        echo "$1no branch$2"
+    dirty=$(isRepoDirty)
+    if [ "$dirty" == "0" ]; then
+        colour="\033[38;5;34m"
     else
-        echo "$1${branch}$2"
+        colour="\033[38;5;124m"
+    fi
+
+    if [ "$branch" == "" ]; then
+        echo -e "$1no branch$colour⇡⇣\033[1;33m$2"
+    else
+        echo -e "$1${branch}$colour↑↓\033[1;33m$2"
     fi
 }
 
