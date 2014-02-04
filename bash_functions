@@ -210,8 +210,8 @@ dir_chomp () {
 }
 
 function check_battery() {
-    local full=$(cat /sys/class/power_supply/BAT0/charge_full)
-    local current=$(cat /sys/class/power_supply/BAT0/charge_now)
+    local full=$(cat /sys/class/power_supply/BAT0/charge_full 2> /dev/null)
+    local current=$(cat /sys/class/power_supply/BAT0/charge_now 2> /dev/null)
 
     if [ ! "$full" ]; then
         return
