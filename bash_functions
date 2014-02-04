@@ -208,4 +208,27 @@ dir_chomp () {
     done
     echo ${b/\/~/\~}${b+/}$p
 }
+
+function check_battery() {
+    local full=$(cat /sys/class/power_supply/BAT0/charge_full)
+    local current=$(cat /sys/class/power_supply/BAT0/charge_now)
+
+    if [ ! "$full" ]; then
+        return
+    fi
+
+    percent=`echo "scale=2;${current} / ${full}" | bc`
+    percent=$(echo "$percent*100" | bc)
+    percent=${percent/.*}
+
+    if [ $percent -lt 60 ]; then
+        local colour="\033[38;5;220m"
+    elif [ $percent -lt 30 ]; then
+        local colour="\033[38;5;124m"
+    fi
+
+    if [ "$colour" ]; then
+        echo -e "${bold}$colour 🁛  $percent%\033[0m${normal}"
+    fi
+}
 # End ~/.bash_functions
