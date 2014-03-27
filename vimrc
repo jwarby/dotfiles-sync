@@ -69,19 +69,6 @@ filetype plugin on
 "indentLines
 let g:indentLine_color_term = 240
 let g:indentLine_char = '┆'
-
-"""""""""""
-" Macros. "
-"""""""""""
-" Comment and uncomment line
-let comment_string = "//"
-let @c='0|i'.comment_string.''
-let @u=':s/\/\///:noh'
-" Insert semi colon at EOL
-let @s='iOF;'
-" Console log
-let @l='iconsole.log();ODOD'
-let @f='<80>kh/var<80>kr<80>kr<80>kr<80>krvy<80>kri = 0; p<80>kri <<80>kD<80>kD<80>kD/)i.length; p<80>kri++'
 """"""""""""""""""
 " Auto commands. "
 """"""""""""""""""
@@ -92,6 +79,8 @@ autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 autocmd FileType gitcommit set tw=200
 " Compile LESS files on save
 autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
+" Assemble nesasm files on save
+autocmd BufWritePost *.asm execute '!nesasm %'
 """"""""""""""""""""
 " Custom commands. "
 " """"""""""""""""""
@@ -125,6 +114,36 @@ function! OpenMdnPage(page)
     execute '!' . '$BROWSER "http://www.google.com/search?q=mdn+' . a:page .'&btnI"'
 endfunction
 command! -nargs=+ -complete=command Mdn call OpenMdnPage(<q-args>)
+
+" Comment
+function! CommentCode()
+    " Don't put multiple comments in
+    call UncommentCode()
+    " Default to C-style ('//') if no comment string set for buffer
+    let comment_string = exists('b:comment_string') ? b:comment_string : '//'
+    " Comment the line
+    execute ':normal 0|i'.comment_string
+    " If the comment has an end part (e.g. html comments), append it to the line
+    if exists('b:comment_end')
+        execute ':normal A '.b:comment_end
+    endif
+endfunction
+command! -range -complete=command Comment <line1>,<line2> call CommentCode()
+
+" Uncomment
+function! UncommentCode()
+    " Default to C-style ('//') if no comment string set for buffer
+    let comment_string = exists('b:comment_string') ? b:comment_string : '\/\/'
+    " Remove comment, ignoring any non-matches
+    execute 's/'.comment_string.'//e'
+    " If comment has an end part (e.g. html comments), remove that too
+    if exists('b:comment_end')
+        execute 's/'.b:comment_end.'//e'
+        " Remove any trailing whitespace left after removing comment end
+        execute ':silent s/\s\+$//e'
+    endif
+endfunction
+command! -range -complete=command Uncomment <line1>,<line2> call UncommentCode()
 """""""""""""""""
 " Key mappings. "
 " """""""""""""""
@@ -140,6 +159,9 @@ nmap <F9> :botright vertical wincmd f<CR>
 " Show revision under cursor in new tab
 nmap <F8> :DisplayGitCommit <c-r><c-w><cr>
 
+" Display tag list
+nmap <F7> :TlistToggle <CR>
+
 " Save (Ctrl+S)
 nmap <C-s> :w<CR>
 " Save (insert mode)
@@ -148,12 +170,12 @@ imap <C-s> <Esc>:w<CR>
 vmap <C-s> <Esc>:w<CR>
 
 " Comment/uncomment shortcut
-imap <C-Right> <Esc>:norm @c<CR>
-vmap <C-Right> <Esc>:'<,'>norm @c<CR>
-nmap <C-Right> <Esc>:norm @c<CR>
-imap <C-Left> <Esc>:norm @u<CR>
-vmap <C-Left> <Esc>:'<,'>norm @u<CR>
-nmap <C-Left> <Esc>:norm @u<CR>
+imap <C-Right> <Esc>:Comment<CR>
+vmap <C-Right> <Esc>:'<,'>Comment<CR>
+nmap <C-Right> <Esc>:Comment<CR>
+imap <C-Left> <Esc>:Uncomment<CR>
+vmap <C-Left> <Esc>:'<,'>Uncomment<CR>
+nmap <C-Left> <Esc>:Uncomment<CR>
 
 " Select all
 nmap <C-a> <Esc>gg <S-v><S-g><CR>
@@ -187,6 +209,16 @@ autocmd FileType diff let b:noHighlightLongLines=1
 " Call highlight long lines to add match groups for files without
 " noHighlightLongLines set
 autocmd BufWinEnter * call HighlightLongLines()
+""""""""""""""""""""""""""
+" Filetype autocommands. "
+""""""""""""""""""""""""""
+autocmd FileType vim let b:comment_string='"'
+autocmd FileType sh,ruby,python,coffee,perl let b:comment_string='#'
+autocmd FileType asm let b:comment_string=';'
+autocmd FileType mustache,html let b:comment_string='<!--'
+autocmd FileType mustache,html let b:comment_end='-->'
+autocmd FileType asm set tabstop=2
+autocmd FileType asm set softtabstop=2
 """""""""""""""""""""""""""""
 " Highlight comment @ tags. "
 """""""""""""""""""""""""""""
@@ -206,5 +238,5 @@ cabbrev vres res
 """""""""""""
 " Pathogen
 execute pathogen#infect()
-call pathogen#helptags() " generate helptags for everything in 'runtimepath'
+"call pathogen#helptags() " generate helptags for everything in 'runtimepath'
 " End .vimrc
