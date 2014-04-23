@@ -103,7 +103,7 @@ fi
 
 # Bold and normal text functions (http://goog.gl/GqV1B)
 bold=`tput bold`
-normal=`tput sgr0`
+normal='tput sgr0'
 
 # Colors
 DEFAULT="\[\033[0m\]"
@@ -120,7 +120,7 @@ function battery() {
     fi
 }
 
-PS1='[\u@\h $(battery)$(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[1;33m\]$(print_git_branch "(" ")")\[\033[0m\] \$ ${normal}'
+PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[01;33m\]$(print_git_branch "(" ")")\[\033[1;31m\]$(print_git_dirty_flag)\[\033[1;33m\]$(print_closing_bracket_if_git_repo)\[\033[00m\] \$ '
 
 # Export variables
 export TERM=xterm-256color

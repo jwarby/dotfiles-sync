@@ -157,15 +157,33 @@ function print_git_branch() {
         return
     fi
 
-    dirty=$(isRepoDirty)
-    if [ "$dirty" != "0" ]; then
-        output="\033[38;5;124m⚑"
+    if [ "$branch" == "" ]; then
+        echo "(no branch"
+    else
+        echo "(${branch}"
+    fi
+}
+
+function print_git_dirty_flag() {
+    isRepo=$(git rev-parse --is-inside-work-tree 2> /dev/null)
+
+    # Do nothing if this is not a Git repo
+    if [ ! "$isRepo" ]; then
+        return
     fi
 
-    if [ "$branch" == "" ]; then
-        echo -e "$1no branch$output\033[1;33m$2"
-    else
-        echo -e "$1${branch}$output\033[1;33m$2"
+    dirty=$(isRepoDirty)
+    if [ "$dirty" != "0" ]; then
+        echo "⚑"
+    fi
+}
+
+function print_closing_bracket_if_git_repo() {
+    isRepo=$(git rev-parse --is-inside-work-tree 2> /dev/null)
+
+    # Do nothing if this is not a Git repo
+    if [ "$isRepo" ]; then
+        echo ")"
     fi
 }
 
