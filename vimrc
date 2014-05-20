@@ -20,6 +20,9 @@ set nu
 set autoindent
 set smartindent
 
+" Colors
+set t_Co=256
+
 " Auto indent spaces per step
 set shiftwidth=4
 
