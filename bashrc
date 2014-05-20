@@ -144,4 +144,7 @@ fi
 if [ -e ~/.bashrc.local ]; then
     source ~/.bashrc.local
 fi
+
+# Add custom scripts to path
+PATH=$PATH:~/bin
 # End ~/.bashrc
