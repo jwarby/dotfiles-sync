@@ -249,4 +249,9 @@ function check_battery() {
         echo -e "${bold}$colour⚡ ${normal}$colour$percent%\033[0m${normal}"
     fi
 }
+
+glp() {
+    git log $@ --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    echo ""
+}
 # End ~/.bash_functions
