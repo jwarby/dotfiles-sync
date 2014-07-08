@@ -12,6 +12,8 @@ do
         # Create symbolic link if it doesn't exist
         if [ ! -e $link ]; then
             ln -s dotfiles/$file $link
+	elif [ ! -L $link ]; then
+	    echo "Failed to make symbolic link for ${file}"
         fi
     fi
 done

@@ -227,6 +227,8 @@ autocmd Syntax ejs let b:comment_end='-->'
 autocmd FileType asm set tabstop=2
 autocmd FileType asm set softtabstop=2
 autocmd FileType asm set shiftwidth=2
+" Android build
+au FileType java set makeprg=./build
 """""""""""""""""""""""""""""
 " Highlight comment @ tags. "
 """""""""""""""""""""""""""""

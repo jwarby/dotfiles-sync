@@ -11,9 +11,6 @@ alias nesasm="/home/james/Programs/nes-dev/./nesasm"
 # Clear
 alias cl='clear'
 
-# Compile less files
-alias lessall='sh /home/james/Scripts/compile-less.sh'
-
 # Make directories with -p flag
 alias mkdir='mkdir -p'
 
