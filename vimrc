@@ -89,6 +89,8 @@ autocmd BufWritePost *.asm execute '!nesasm %'
 " """"""""""""""""""
 " Git blame current file
 command! Wtf execute "!git blame %"
+" Git history of current file
+command! History execute "!git log -p -- % | vim -"
 """""""""""""""""
 " Highlighting. "
 """""""""""""""""
@@ -208,7 +210,7 @@ function! HighlightLongLines()
 endfunction
 
 " Set no highlight option for diff buffers
-autocmd FileType diff let b:noHighlightLongLines=1
+autocmd FileType git let b:noHighlightLongLines=1
 " Call highlight long lines to add match groups for files without
 " noHighlightLongLines set
 autocmd BufWinEnter * call HighlightLongLines()
