@@ -91,6 +91,8 @@ autocmd BufWritePost *.asm execute '!nesasm %'
 command! Wtf execute "!git blame %"
 " Git history of current file
 command! History execute "!git log -p -- % | vim -"
+" Switch to 2 space tabs
+command! TwoSpaceTabs execute "set tabstop=2 | set softtabstop=2 | set shiftwidth=2"
 """""""""""""""""
 " Highlighting. "
 """""""""""""""""
