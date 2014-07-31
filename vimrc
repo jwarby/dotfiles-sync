@@ -202,7 +202,7 @@ function! HighlightLongLines()
         return
     endif
     " Add highlight group for 80+ column lines
-    highlight LongLines ctermbg=167 ctermfg=188
+    highlight LongLines ctermbg=52 ctermfg=188
     call matchadd('LongLines', '\%>80v.\+', -1)
     " Add highlight group for 120+ column lines
     highlight VeryLongLines ctermbg=124 ctermfg=188
