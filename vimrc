@@ -138,7 +138,7 @@ function! UncommentCode()
     " Default to C-style ('//') if no comment string set for buffer
     let comment_string = exists('b:comment_string') ? b:comment_string : '\/\/'
     " Remove comment, ignoring any non-matches
-    execute 's/'.comment_string.'//e'
+    execute 's/^'.comment_string.'//e'
     " If comment has an end part (e.g. html comments), remove that too
     if exists('b:comment_end')
         execute 's/'.b:comment_end.'//e'
