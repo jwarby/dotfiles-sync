@@ -254,4 +254,21 @@ glp() {
     git log $@ --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     echo ""
 }
+
+# Get a file from a remote location using scp
+#
+# Usage:
+#  take <remote file location>:[user@]<remote server> <local location to copy to>
+take() {
+  scp $2:$1 $3
+}
+
+# Give a file to a remote location using scp
+#
+# Usage:
+#  give <local file location> [user@]<remote server>:<remote location to copy to>
+give() {
+  scp $1 $2:$3
+}
+
 # End ~/.bash_functions

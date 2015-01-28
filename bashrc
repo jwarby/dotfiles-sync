@@ -120,8 +120,17 @@ function battery() {
     fi
 }
 
-PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[01;33m\]$(print_git_branch "(" ")")\[\033[38;5;124m\]$(print_git_dirty_flag)\[\033[1;33m\]$(print_closing_bracket_if_git_repo)\[\033[00m\] \$ '
+# PS1 with no git stuff
+function gitlost() {
+  PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[01;33m\]\[\033[00m\] \$ '
+}
 
+function gitin() {
+  PS1='[\u@\h $(dir_chomp `pwd` $PS1_MAX_WIDTH)]\[\033[01;33m\]$(print_git_branch "(" ")")\[\033[38;5;124m\]$(print_git_dirty_flag)\[\033[1;33m\]$(print_closing_bracket_if_git_repo)\[\033[00m\] \$ '
+}
+
+
+gitin
 # Export variables
 export TERM=xterm-256color
 export GREP_OPTIONS='--color=auto'
@@ -148,3 +157,8 @@ fi
 # Add custom scripts to path
 PATH=$PATH:~/bin
 # End ~/.bashrc
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
