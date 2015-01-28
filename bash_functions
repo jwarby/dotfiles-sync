@@ -255,24 +255,20 @@ glp() {
     echo ""
 }
 
-# Get all global namespaces
-function ggn() {
-    grep "(['\"][A-Z][a-z0-9]\+\." ./app -rohI --exclude-dir={app/public,app/os/i18n,app/jquery,app/steal} \
-    | sed "s/^(['\"]/\"/" \
-    | sed "s/\.$/\",/" \
-    | sort \
-    | uniq
+# Get a file from a remote location using scp
+#
+# Usage:
+#  take <remote file location>:[user@]<remote server> <local location to copy to>
+take() {
+  scp $2:$1 $3
 }
 
-# Get all global namespaces as array
-function ggnaa() {
-  ggn | tr ' ' '\n' | pr -4 -a -s' ' -t
+# Give a file to a remote location using scp
+#
+# Usage:
+#  give <local file location> [user@]<remote server>:<remote location to copy to>
+give() {
+  scp $1 $2:$3
 }
 
-function updatePredefs() {
-  lead='\s*\/\/===GENERATED CONTENT HOOK - DO NOT REMOVE==='
-  tail='\s*\/\/===END GENERATED CONTENT HOOK - DO NOT REMOVE==='
-  newContent=`ggnaa | sed 's/^/    /'`
-  perl -0777 -i -pe "s/($lead\\n).*(\\n$tail)/\$1$newContent\$2/s" $1
-}
 # End ~/.bash_functions

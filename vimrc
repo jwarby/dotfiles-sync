@@ -1,7 +1,12 @@
 " Begin .vimrc
 color hybrid
 
-" Make scrolling a little better - stops it getting stuck
+" Turn filetype plugin on
+filetype on
+filetype plugin on
+
+" Make scrolling not rubbish
+set ttyfast
 set lazyredraw
 
 " Not compatible with vi
@@ -11,10 +16,10 @@ set nocompatible
 set expandtab
 
 " 4 spaces per tab, not 8
-set tabstop=4
+set tabstop=2
 
 " Treat spaced tabs as normal tabs (i.e.: backspace deletes the 4 spaces)
-set softtabstop=4
+set softtabstop=2
 
 " Line numbers
 set nu
@@ -27,7 +32,7 @@ set smartindent
 set t_Co=256
 
 " Auto indent spaces per step
-set shiftwidth=4
+set shiftwidth=2
 
 " Syntax highlighting
 syntax on
@@ -64,10 +69,6 @@ let g:airline_powerline_fonts = 1
 " Incremental search
 set incsearch
 
-" Turn filetype plugin on
-filetype on
-filetype plugin on
-
 """"""""""""""""""""
 " Plugin settings. "
 """"""""""""""""""""
@@ -78,6 +79,11 @@ let g:indentLine_char = '┆'
 """"""""""""""""""
 " Auto commands. "
 """"""""""""""""""
+" Git commit overrides
+" Make sure editing starts at first line
+autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
+" Override stupid default text width
+autocmd FileType gitcommit set tw=80
 " Compile LESS files on save
 autocmd BufWritePost *.less execute '!type lessc && lessc --url-args=v=__version__ % > %:r.css'
 " Lint XML on save
@@ -93,6 +99,8 @@ command! Wtf execute "!git blame %"
 command! History execute "!git log -p -- % | vim -"
 " Switch to 2 space tabs
 command! TwoSpaceTabs execute "set tabstop=2 | set softtabstop=2 | set shiftwidth=2"
+" Switch to 4 space tabs
+command! FourSpaceTabs execute "set tabstop=4 | set softtabstop=4 | set shiftwidth=4"
 """""""""""""""""
 " Highlighting. "
 """""""""""""""""
@@ -142,7 +150,7 @@ function! UncommentCode()
     " Default to C-style ('//') if no comment string set for buffer
     let comment_string = exists('b:comment_string') ? b:comment_string : '\/\/'
     " Remove comment, ignoring any non-matches
-    execute 's/^'.comment_string.'//e'
+  execute 's/^\([^a-z0-9A-Z_]*\)'.comment_string.'/\1/e'
     " If comment has an end part (e.g. html comments), remove that too
     if exists('b:comment_end')
         execute 's/'.b:comment_end.'//e'

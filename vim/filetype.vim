@@ -15,6 +15,7 @@ augroup filetypedetect
     au! BufRead,BufNewFile *.ejs setfiletype javascript.html
     au! BufRead,BufNewFile *.ejs set syn=ejs
     au! BufRead,BufNewFile *.handlebars set filetype=mustache
+    au! BufRead,BufNewFile *.hbs set filetype=mustache
     au! FileType git,diff setlocal modified!
 augroup END
 
