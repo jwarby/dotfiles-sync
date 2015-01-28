@@ -1,5 +1,8 @@
 " Begin .vimrc
-color xoria256
+color hybrid
+
+" Make scrolling a little better - stops it getting stuck
+set lazyredraw
 
 " Not compatible with vi
 set nocompatible
@@ -75,13 +78,10 @@ let g:indentLine_char = '┆'
 """"""""""""""""""
 " Auto commands. "
 """"""""""""""""""
-" Git commit overrides
-" Make sure editing starts at first line
-autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
-" Override stupid default text width
-autocmd FileType gitcommit set tw=200
 " Compile LESS files on save
-autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
+autocmd BufWritePost *.less execute '!type lessc && lessc --url-args=v=__version__ % > %:r.css'
+" Lint XML on save
+autocmd BufWritePost *.xml execute '!type xmllint &> /dev/null && if xmllint config/_dev_manifest.xml &> /dev/null; then echo -e "\E[32m$3XML OK ✔\033[0m"; else echo -e "\E[31m$3XML invalid ✘\033[0m"; fi'
 " Assemble nesasm files on save
 autocmd BufWritePost *.asm execute '!nesasm %'
 """"""""""""""""""""
@@ -169,6 +169,9 @@ nmap <F8> :DisplayGitCommit <c-r><c-w><cr>
 " Display tag list
 nmap <F7> :TlistToggle <CR>
 
+" Toggle NERDTree
+nmap <F12> :NERDTreeToggle <CR>
+
 " Save (Ctrl+S)
 nmap <C-s> :w<CR>
 " Save (insert mode)
@@ -219,6 +222,11 @@ autocmd BufWinEnter * call HighlightLongLines()
 """"""""""""""""""""""""""
 " Filetype autocommands. "
 """"""""""""""""""""""""""
+" When editing a commit message, make sure the cursor starts in the right place
+autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
+" Wrap commit messages at 80 characters
+autocmd FileType gitcommit set tw=80
+" Comment strings per file type
 autocmd FileType vim let b:comment_string='"'
 autocmd FileType sh,ruby,python,coffee,perl let b:comment_string='#'
 autocmd FileType asm let b:comment_string=';'
@@ -226,11 +234,10 @@ autocmd FileType mustache,html let b:comment_string='<!--'
 autocmd FileType mustache,html let b:comment_end='-->'
 autocmd Syntax ejs let b:comment_string='<!--'
 autocmd Syntax ejs let b:comment_end='-->'
+" Always use 2 space tabs for assembly files
 autocmd FileType asm set tabstop=2
 autocmd FileType asm set softtabstop=2
 autocmd FileType asm set shiftwidth=2
-" Android build
-au FileType java set makeprg=./build
 """""""""""""""""""""""""""""
 " Highlight comment @ tags. "
 """""""""""""""""""""""""""""
@@ -240,6 +247,10 @@ au BufWinEnter * call matchadd('Debug', '@DEBUG\|@TODO\|@fixme\c', -1)
 
 highlight Hack ctermbg=124
 au BufWinEnter * call matchadd('Hack', '@HACK\|@WITCHCRAFT\|@HURTALERT\c', -1)
+
+highlight Deprecated ctermbg=57 ctermfg=159
+au BufWinEnter * call matchadd('Deprecated', '@deprecated\c', -1)
+
 """""""""""""""""""""""""""""""""""""""""
 " Command abbreviations (i.e. aliases). "
 """""""""""""""""""""""""""""""""""""""""

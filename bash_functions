@@ -254,4 +254,25 @@ glp() {
     git log $@ --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     echo ""
 }
+
+# Get all global namespaces
+function ggn() {
+    grep "(['\"][A-Z][a-z0-9]\+\." ./app -rohI --exclude-dir={app/public,app/os/i18n,app/jquery,app/steal} \
+    | sed "s/^(['\"]/\"/" \
+    | sed "s/\.$/\",/" \
+    | sort \
+    | uniq
+}
+
+# Get all global namespaces as array
+function ggnaa() {
+  ggn | tr ' ' '\n' | pr -4 -a -s' ' -t
+}
+
+function updatePredefs() {
+  lead='\s*\/\/===GENERATED CONTENT HOOK - DO NOT REMOVE==='
+  tail='\s*\/\/===END GENERATED CONTENT HOOK - DO NOT REMOVE==='
+  newContent=`ggnaa | sed 's/^/    /'`
+  perl -0777 -i -pe "s/($lead\\n).*(\\n$tail)/\$1$newContent\$2/s" $1
+}
 # End ~/.bash_functions

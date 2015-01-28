@@ -148,3 +148,5 @@ fi
 # Add custom scripts to path
 PATH=$PATH:~/bin
 # End ~/.bashrc
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting

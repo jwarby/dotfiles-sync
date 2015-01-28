@@ -25,4 +25,5 @@ alias :q='exit'
 # Log unpushed commits
 alias glu='git log --no-merges --author="`git config user.name`" `git rev-parse --abbrev-ref --symbolic-full-name @{u}`..HEAD | vim -'
 alias glu-diff='git show --no-merges --author="`git config user.name`" `git rev-parse --abbrev-ref --symbolic-full-name @{u}`..HEAD | vim -'
+
 # End ~/.bash_aliases
