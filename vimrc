@@ -65,6 +65,7 @@ set laststatus=2
 set noshowmode
 set ttimeoutlen=50
 let g:airline_powerline_fonts = 1
+let g:vim_json_syntax_conceal = 0
 
 " Incremental search
 set incsearch
@@ -85,7 +86,7 @@ autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 " Override stupid default text width
 autocmd FileType gitcommit set tw=80
 " Compile LESS files on save
-autocmd BufWritePost *.less execute '!type lessc && lessc --url-args=v=__version__ % > %:r.css'
+autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
 " Lint XML on save
 autocmd BufWritePost *.xml execute '!type xmllint &> /dev/null && if xmllint config/_dev_manifest.xml &> /dev/null; then echo -e "\E[32m$3XML OK ✔\033[0m"; else echo -e "\E[31m$3XML invalid ✘\033[0m"; fi'
 " Assemble nesasm files on save
@@ -97,10 +98,6 @@ autocmd BufWritePost *.asm execute '!nesasm %'
 command! Wtf execute "!git blame %"
 " Git history of current file
 command! History execute "!git log -p -- % | vim -"
-" Switch to 2 space tabs
-command! TwoSpaceTabs execute "set tabstop=2 | set softtabstop=2 | set shiftwidth=2"
-" Switch to 4 space tabs
-command! FourSpaceTabs execute "set tabstop=4 | set softtabstop=4 | set shiftwidth=4"
 """""""""""""""""
 " Highlighting. "
 """""""""""""""""
@@ -197,6 +194,70 @@ nmap <C-Left> <Esc>:Uncomment<CR>
 
 " Select all
 nmap <C-a> <Esc>gg <S-v><S-g><CR>
+
+"""""""""""""""""""""
+" Hex file editing. "
+"""""""""""""""""""""
+
+" Toggle hex mode keys
+nnoremap <C-H> :Hexmode<CR>
+inoremap <C-H> <Esc>:Hexmode<CR>
+vnoremap <C-H> :<C-U>Hexmode<CR>
+
+" ex command for toggling hex mode - define mapping if desired
+command -bar Hexmode call ToggleHex()
+
+" helper function to toggle hex mode
+function ToggleHex()
+  " hex mode should be considered a read-only operation
+  " save values for modified and read-only for restoration later,
+  " and clear the read-only flag for now
+  let l:modified=&mod
+  let l:oldreadonly=&readonly
+  let &readonly=0
+  let l:oldmodifiable=&modifiable
+  let &modifiable=1
+  if !exists("b:editHex") || !b:editHex
+    " save old options
+    let b:oldft=&ft
+    let b:oldbin=&bin
+    " set new options
+    setlocal binary " make sure it overrides any textwidth, etc.
+    silent :e " this will reload the file without trickeries 
+              "(DOS line endings will be shown entirely )
+    let &ft="xxd"
+    " set status
+    let b:editHex=1
+    " switch to hex editor
+    %!xxd
+  else
+    " restore old options
+    let &ft=b:oldft
+    if !b:oldbin
+      setlocal nobinary
+    endif
+    " set status
+    let b:editHex=0
+    " return to normal editing
+    %!xxd -r
+  endif
+  " restore values for modified and read only state
+  let &mod=l:modified
+  let &readonly=l:oldreadonly
+  let &modifiable=l:oldmodifiable
+endfunction
+
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre  *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd
+  au BufReadPost *.bin set ft=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd
+  au BufWritePost *.bin set nomod | endif
+augroup END
 """"""""""""""""""""""""""
 " Add and remove quotes. "
 """"""""""""""""""""""""""
@@ -258,7 +319,6 @@ au BufWinEnter * call matchadd('Hack', '@HACK\|@WITCHCRAFT\|@HURTALERT\c', -1)
 
 highlight Deprecated ctermbg=57 ctermfg=159
 au BufWinEnter * call matchadd('Deprecated', '@deprecated\c', -1)
-
 """""""""""""""""""""""""""""""""""""""""
 " Command abbreviations (i.e. aliases). "
 """""""""""""""""""""""""""""""""""""""""
