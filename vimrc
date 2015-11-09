@@ -9,6 +9,7 @@ filetype plugin on
 set ttyfast
 set lazyredraw
 
+set hlsearch
 " Not compatible with vi
 set nocompatible
 
@@ -70,6 +71,13 @@ let g:vim_json_syntax_conceal = 0
 " Incremental search
 set incsearch
 
+"""""""""""""""""""""""""""""""""""
+" Remap increment/decrement keys. "
+" """""""""""""""""""""""""""""""""""
+nnoremap <C-Up> <C-a>
+nnoremap <C-Down> <C-x>
+
+
 """"""""""""""""""""
 " Plugin settings. "
 """"""""""""""""""""
@@ -85,12 +93,15 @@ let g:indentLine_char = '┆'
 autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 " Override stupid default text width
 autocmd FileType gitcommit set tw=80
+autocmd FileType gitcommit silent :setlocal spell spelllang=en_gb
+autocmd FileType gitcommit call DisplayGitChanges()
+
 " Compile LESS files on save
-autocmd BufWritePost *.less execute '!type lessc && lessc % > %:r.css'
+autocmd BufWritePost *.less execute '! if [ -f %:r.css ]; then type lessc && lessc % > %:r.css; fi'
 " Lint XML on save
-autocmd BufWritePost *.xml execute '!type xmllint &> /dev/null && if xmllint config/_dev_manifest.xml &> /dev/null; then echo -e "\E[32m$3XML OK ✔\033[0m"; else echo -e "\E[31m$3XML invalid ✘\033[0m"; fi'
-" Assemble nesasm files on save
-autocmd BufWritePost *.asm execute '!nesasm %'
+autocmd BufWritePost *.xml execute '!type xmllint &> /dev/null && if xmllint % &> /dev/null; then echo -e "\E[32m$3XML OK ✔\033[0m"; else echo -e "\E[31m$3XML invalid ✘\033[0m"; fi'
+" Close gitchanges buffers
+autocmd BufLeave * call CloseGitChanges()
 """"""""""""""""""""
 " Custom commands. "
 " """"""""""""""""""
@@ -110,6 +121,23 @@ au InsertLeave * match ExtraWhiteSpace /\s\+$/
 """"""""""""""
 " Functions. "
 """"""""""""""
+function! DisplayGitChanges()
+  let changes = system("git diff --cached")
+  bo vnew
+  :silent! file gitchanges
+  put=changes
+  set syntax=diff
+  :normal ggdd
+  set nomodified
+endfunction
+command! -nargs=+ -complete=command DisplayGitChanges call DisplayGitChanges()
+
+function! CloseGitChanges()
+  :silent! bunload! gitchanges
+  :exit
+endfunction
+command! -nargs=+ -complete=command CloseGitChanges call CloseGitChanges()
+
 " Display git commit for revision
 function! DisplayGitCommit(revision)
   let commit = system("git show ".a:revision)
@@ -127,35 +155,6 @@ function! OpenMdnPage(page)
 endfunction
 command! -nargs=+ -complete=command Mdn call OpenMdnPage(<q-args>)
 
-" Comment
-function! CommentCode()
-    " Don't put multiple comments in
-    call UncommentCode()
-    " Default to C-style ('//') if no comment string set for buffer
-    let comment_string = exists('b:comment_string') ? b:comment_string : '//'
-    " Comment the line
-    execute ':normal 0|i'.comment_string
-    " If the comment has an end part (e.g. html comments), append it to the line
-    if exists('b:comment_end')
-        execute ':normal A '.b:comment_end
-    endif
-endfunction
-command! -range -complete=command Comment <line1>,<line2> call CommentCode()
-
-" Uncomment
-function! UncommentCode()
-    " Default to C-style ('//') if no comment string set for buffer
-    let comment_string = exists('b:comment_string') ? b:comment_string : '\/\/'
-    " Remove comment, ignoring any non-matches
-  execute 's/^\([^a-z0-9A-Z_]*\)'.comment_string.'/\1/e'
-    " If comment has an end part (e.g. html comments), remove that too
-    if exists('b:comment_end')
-        execute 's/'.b:comment_end.'//e'
-        " Remove any trailing whitespace left after removing comment end
-        execute ':silent s/\s\+$//e'
-    endif
-endfunction
-command! -range -complete=command Uncomment <line1>,<line2> call UncommentCode()
 """""""""""""""""
 " Key mappings. "
 " """""""""""""""
@@ -185,12 +184,9 @@ imap <C-s> <Esc>:w<CR>
 vmap <C-s> <Esc>:w<CR>
 
 " Comment/uncomment shortcut
-imap <C-Right> <Esc>:Comment<CR>
-vmap <C-Right> <Esc>:'<,'>Comment<CR>
-nmap <C-Right> <Esc>:Comment<CR>
-imap <C-Left> <Esc>:Uncomment<CR>
-vmap <C-Left> <Esc>:'<,'>Uncomment<CR>
-nmap <C-Left> <Esc>:Uncomment<CR>
+imap <C-Right> <Esc>:Commentary<CR>
+vmap <C-Right> <Esc>:'<,'>Commentary<CR>
+nmap <C-Right> <Esc>:Commentary<CR>
 
 " Select all
 nmap <C-a> <Esc>gg <S-v><S-g><CR>
@@ -258,15 +254,9 @@ augroup Binary
   au BufWritePost *.bin if &bin | %!xxd
   au BufWritePost *.bin set nomod | endif
 augroup END
-""""""""""""""""""""""""""
-" Add and remove quotes. "
-""""""""""""""""""""""""""
-" `qs` Quote with singles
-nnoremap qs :silent! normal mpea'<Esc>bi'<Esc>`pl
-" `qd` Quote with doubles
-nnoremap qd :silent! normal mpea"<Esc>bi"<Esc>`pl
-" `rq` Remove quotes from a word
-nnoremap rq :silent! normal mpeld bhd `ph<CR>
+
+" Move the rest of the line contents to a newline
+nnoremap go i<CR><Esc>
 """""""""""""""""""""""""
 " Highlight long lines. "
 """""""""""""""""""""""""
@@ -291,18 +281,12 @@ autocmd BufWinEnter * call HighlightLongLines()
 """"""""""""""""""""""""""
 " Filetype autocommands. "
 """"""""""""""""""""""""""
+" Don't continue single line comments onto the next line
+au FileType javascript setlocal comments-=:// comments+=f://
 " When editing a commit message, make sure the cursor starts in the right place
 autocmd FileType gitcommit call setpos('.', [0, 1, 1, 0])
 " Wrap commit messages at 80 characters
 autocmd FileType gitcommit set tw=80
-" Comment strings per file type
-autocmd FileType vim let b:comment_string='"'
-autocmd FileType sh,ruby,python,coffee,perl let b:comment_string='#'
-autocmd FileType asm let b:comment_string=';'
-autocmd FileType mustache,html let b:comment_string='<!--'
-autocmd FileType mustache,html let b:comment_end='-->'
-autocmd Syntax ejs let b:comment_string='<!--'
-autocmd Syntax ejs let b:comment_end='-->'
 " Always use 2 space tabs for assembly files
 autocmd FileType asm set tabstop=2
 autocmd FileType asm set softtabstop=2
@@ -324,6 +308,11 @@ au BufWinEnter * call matchadd('Deprecated', '@deprecated\c', -1)
 """""""""""""""""""""""""""""""""""""""""
 cabbrev hres vertical res
 cabbrev vres res
+
+" let g:syntastic_javascript_jshint_args = '--config /home/james/.jshintrc'
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_javascript_checkers = ["eslint"]
+
 """""""""""""
 " Pathogen. "
 """""""""""""
