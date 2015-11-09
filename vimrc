@@ -133,8 +133,10 @@ endfunction
 command! -nargs=+ -complete=command DisplayGitChanges call DisplayGitChanges()
 
 function! CloseGitChanges()
-  :silent! bunload! gitchanges
-  :exit
+  if buflisted('gitchanges') != 0
+    :bunload! gitchanges
+    :exit
+  endif
 endfunction
 command! -nargs=+ -complete=command CloseGitChanges call CloseGitChanges()
 
