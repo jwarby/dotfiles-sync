@@ -101,7 +101,7 @@ autocmd BufWritePost *.less execute '! if [ -f %:r.css ]; then type lessc && les
 " Lint XML on save
 autocmd BufWritePost *.xml execute '!type xmllint &> /dev/null && if xmllint % &> /dev/null; then echo -e "\E[32m$3XML OK ✔\033[0m"; else echo -e "\E[31m$3XML invalid ✘\033[0m"; fi'
 " Close gitchanges buffers
-autocmd BufLeave * call CloseGitChanges()
+autocmd BufUnload * call CloseGitChanges()
 """"""""""""""""""""
 " Custom commands. "
 " """"""""""""""""""
@@ -135,7 +135,6 @@ command! -nargs=+ -complete=command DisplayGitChanges call DisplayGitChanges()
 function! CloseGitChanges()
   if buflisted('gitchanges') != 0
     :bunload! gitchanges
-    :exit
   endif
 endfunction
 command! -nargs=+ -complete=command CloseGitChanges call CloseGitChanges()
